@@ -3,16 +3,32 @@
 Libro: ecuación (18.18).  Rn = f[x_{n+1},...,x_0] * prod(x - x_i)
 """
 
-def error_estimado_interpolacion(dif_siguiente, nodos, x):
-    """Estima el error de truncamiento con un punto extra.
+from ejercicios.interpolacion.error_estimado_interpolacion import (
+    error_estimado_interpolacion,
+)
 
-    dif_siguiente : diferencia dividida de orden n+1.
-    nodos         : lista x0 ... xn.
-    x             : punto donde se evalúa.
+
+def interpolacion_cuadratica(x0, y0, x1, y1, x2, y2, x, x3=None, y3=None):
+    """Devuelve ``(y, error)``.
+
+    y     : valor interpolado con la parábola que pasa por los tres nodos.
+    error : ``None`` si no hay cuarto dato; si lo hay,
+            ``R2 = f[x3,x2,x1,x0] * (x - x0)(x - x1)(x - x2)``.
+
+    x3, y3 son OPCIONALES: puedes terminar el método sin usarlos y, cuando
+    escribas ``error_estimado_interpolacion``, regresar aquí y activarlos.
     """
-    raise NotImplementedError("Completa error_estimado_interpolacion")
+    m1 = (y1 - y0) / (x1 - x0)
+    m2 = (y2 - y1) / (x2 - x1)
 
+    b0 = y0
+    b1 = m1
+    b2 = (m2 - m1) / (x2 - x0)
 
-if __name__ == "__main__":
-    # dif = 0.007865529, nodos (1,4,6), x = 2  ->  0.0629242
-    print(error_estimado_interpolacion(0.007865529, [1, 4, 6], 2))
+    y = b0 + b1 * (x - x0) + b2 * (x - x0) * (x - x1)
+
+    error = None
+    if x3 is not None and y3 is not None:
+        error = error_estimado_interpolacion(x0, y0, x1, y1, x2, y2, x3, y3, x)
+
+    return y, error
