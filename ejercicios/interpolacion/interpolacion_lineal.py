@@ -12,22 +12,21 @@ from ejercicios.interpolacion.error_estimado_interpolacion import (
 
 
 def interpolacion_lineal(x0, y0, x1, y1, x, x2=None, y2=None):
-    """Devuelve ``(y, error)``.
+    """Devuelve `(y, error)`.
 
     y     : valor interpolado con la recta que pasa por (x0, y0) y (x1, y1).
-    error : ``None`` si no hay tercer dato; si lo hay,
-            ``R1 = f[x2,x1,x0] * (x - x0) * (x - x1)``.
-
-    x2, y2 son OPCIONALES: puedes terminar el método sin usarlos y, cuando
-    escribas ``error_estimado_interpolacion``, regresar aquí y activarlos.
+    error : `None` si no hay tercer dato; si lo hay, se estima con (18.18).
     """
-    # error = None
-    # return y, error
-    raise NotImplementedError("Completa interpolacion_lineal")
+    if x1 == x0:
+        raise ValueError("x0 y x1 no pueden ser iguales para interpolar.")
 
+    m = (y1 - y0) / (x1 - x0)
+    y = y0 + m * (x - x0)
 
-if __name__ == "__main__":
-    # sin tercer dato: f(1)=0, f(4)=3  ->  (1.0, None)
-    print(interpolacion_lineal(1, 0, 4, 3, 2))
-    # con tercer dato: además del valor, el error estimado
-    print(interpolacion_lineal(1, 0, 4, 3, 2, x2=6, y2=5))
+    if x2 is not None and y2 is not None:
+        error = error_estimado_interpolacion(x0, y0, x1, y1, x2, y2, x)
+    else:
+        error = None
+
+    return y, error
+
