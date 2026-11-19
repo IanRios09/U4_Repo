@@ -28,13 +28,17 @@ def interpolacion_cuadratica(x0, y0, x1, y1, x2, y2, x, x3=None, y3=None):
     x3, y3 son OPCIONALES: puedes terminar el método sin usarlos y, cuando
     escribas ``error_estimado_interpolacion``, regresar aquí y activarlos.
     """
-    # error = None
-    # return y, error
-    raise NotImplementedError("Completa interpolacion_cuadratica")
+    m1 = (y1 - y0) / (x1 - x0)
+    m2 = (y2 - y1) / (x2 - x1)
 
+    b0 = y0
+    b1 = m1
+    b2 = (m2 - m1) / (x2 - x0)
 
-if __name__ == "__main__":
-    # nodos (0,1), (1,3), (2,7); evaluar en 1.5  ->  (4.75, None)
-    print(interpolacion_cuadratica(0, 1, 1, 3, 2, 7, 1.5))
-    # con cuarto dato: además del valor, el error estimado
-    print(interpolacion_cuadratica(0, 1, 1, 3, 2, 7, 1.5, x3=3, y3=13))
+    y = b0 + b1 * (x - x0) + b2 * (x - x0) * (x - x1)
+
+    error = None
+    if x3 is not None and y3 is not None:
+        error = error_estimado_interpolacion(x0, y0, x1, y1, x2, y2, x3, y3, x)
+
+    return y, error
